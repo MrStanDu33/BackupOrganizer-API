@@ -64,8 +64,7 @@ $commands = array(
 	'git submodule sync',
 	'git submodule update',
     'git submodule status',
-    'export HOME=/var/www/',
-    'composer install',
+    '/usr/local/bin/composer install --no-ansi --no-dev --no-interaction --no-progress --no-scripts --optimize-autoloader',
     'test -e /usr/share/update-notifier/notify-reboot-required && echo "system restart required"',
 );
 

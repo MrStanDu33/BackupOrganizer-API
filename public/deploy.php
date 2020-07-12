@@ -63,7 +63,8 @@ $commands = array(
 	'git status',
 	'git submodule sync',
 	'git submodule update',
-	'git submodule status',
+    'git submodule status',
+    'composer install',
     'test -e /usr/share/update-notifier/notify-reboot-required && echo "system restart required"',
 );
 

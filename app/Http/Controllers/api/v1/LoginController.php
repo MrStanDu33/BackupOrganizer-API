@@ -16,8 +16,8 @@ class LoginController extends Controller
             'password' => 'required|string',
         ]);
 
-        if (!Auth::attempt($login))
-            return response(['message' => 'invalid login credentials.'], config('httpcodes.UNAUTHORIZED'));
+        if (!Auth::attempt($login, true))
+            return response(['message' => 'Invalid login credentials.'], config('httpcodes.UNAUTHORIZED'));
 
         $accessToken = Auth::user()->createToken('authToken')->accessToken;
 
@@ -25,19 +25,23 @@ class LoginController extends Controller
     }
 
     public function register(Request $request) {
-        return response(['message' => 'Register has been manually desactivated.'], config('httpcodes.FORBIDDEN'));
-        $request->validate([
+        if (!env('ALLOW_REGISTRATION')) return response(['message' => 'Register has been manually desactivated.'], config('httpcodes.FORBIDDEN'));
+        $login = $request->validate([
             'name' => 'required',
             'email' => 'required|email',
             'password' => 'required|min:8'
         ]);
 
+        if (User::where('email', '=', $login['email'])->exists()) return response(['message' => 'A user already exist with given email address.'], config('httpcodes.CONFLICT'));
+
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password)
+            'name' => $login['name'],
+            'email' => $login['email'],
+            'password' => bcrypt($login['password'])
         ]);
 
-        return response()->json($user);
+        $accessToken = $user->createToken('authToken')->accessToken;
+
+        return response(['user' => $user, 'accessToken' => $accessToken], config('httpcodes.CREATED'));
     }
 }

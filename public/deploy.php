@@ -64,14 +64,15 @@ $commands = array(
 	'git submodule sync',
 	'git submodule update',
     'git submodule status',
-    '/usr/local/bin/composer install --no-ansi --no-dev --no-interaction --no-progress --no-scripts --optimize-autoloader',
+    '/usr/local/bin/composer install -d /var/www/danielsrothstan/backup-organizer.daniels-roth-stan.fr/ --no-ansi --no-interaction --no-progress --no-scripts --optimize-autoloader',
     'test -e /usr/share/update-notifier/notify-reboot-required && echo "system restart required"',
 );
 
 $output = "\n";
 
 $log = "####### ".date('Y-m-d H:i:s'). " #######\n";
-
+putenv("HOME=/var/www/");
+putenv("COMPOSER_HOME=/var/www/.composer");
 foreach($commands AS $command){
     // Run it
     $tmp = shell_exec("$command 2>&1");

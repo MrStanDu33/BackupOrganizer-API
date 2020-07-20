@@ -18,10 +18,10 @@ class LoginController extends Controller
         ]);
 
         // check if parameters are corrects
-        if ($validation->fails()) return response(['message' => $validation->messages()], config('httpcodes.UNPROCESSABLE_ENTITY'));
+        if ($login->fails()) return response(['message' => $login->messages()], config('httpcodes.UNPROCESSABLE_ENTITY'));
 
         // check if user can log in
-        if (!Auth::attempt($login, true)) return response(['message' => 'Invalid login credentials.'], config('httpcodes.UNAUTHORIZED'));
+        if (!Auth::attempt(['email' => $request->email, 'password' => $request->password], true)) return response(['message' => 'Invalid login credentials.'], config('httpcodes.UNAUTHORIZED'));
 
         $accessToken = Auth::user()->createToken('authToken')->accessToken;
 

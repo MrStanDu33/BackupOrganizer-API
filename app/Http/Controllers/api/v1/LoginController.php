@@ -39,10 +39,10 @@ class LoginController extends Controller
         ]);
 
         // check if parameters are corrects
-        if ($validation->fails()) return response(['message' => $validation->messages()], config('httpcodes.UNPROCESSABLE_ENTITY'));
+        if ($validation->fails()) return response(['errors' => $validation->messages()], config('httpcodes.UNPROCESSABLE_ENTITY'));
 
         // check if user already exists
-        if (User::where('email', '=', $request->email)->exists()) return response(['message' => 'A user already exist with given email address.'], config('httpcodes.CONFLICT'));
+        if (User::where('email', '=', $request->email)->exists()) return response(['errors' => ['conflict' => 'A user already exist with given email address.']], config('httpcodes.CONFLICT'));
 
         $user = User::create([
             'name' => $request->name,

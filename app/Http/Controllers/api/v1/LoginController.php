@@ -12,13 +12,13 @@ use Illuminate\Support\Facades\Validator;
 class LoginController extends Controller
 {
     public function login(Request $request) {
-        $login = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(),[
             'email' => 'required|string',
             'password' => 'required|string',
         ]);
 
         // check if parameters are corrects
-        if ($login->fails()) return response(['message' => $login->messages()], config('httpcodes.UNPROCESSABLE_ENTITY'));
+        if ($validator->fails()) return response(['message' => $validator->messages()], config('httpcodes.UNPROCESSABLE_ENTITY'));
 
         // check if user can log in
         if (!Auth::attempt(['email' => $request->email, 'password' => $request->password], true)) return response(['message' => 'Invalid login credentials.'], config('httpcodes.UNAUTHORIZED'));

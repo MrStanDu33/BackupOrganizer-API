@@ -16,20 +16,20 @@ class CreateCustomersTable extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('siren');
-            $table->string('logo');
-            $table->string('address_street_number');
-            $table->string('address_street_name');
-            $table->string('address_zip_code');
-            $table->string('address_city');
-            $table->string('address_country');
-            $table->string('address_billing');
-            $table->string('tva_number');
-            $table->string('website');
-            $table->string('source');
-            $table->string('referent_name');
-            $table->string('referent_email');
-            $table->string('referent_number');
+            $table->string('siren')->nullable()->default(null);
+            $table->string('logo')->nullable()->default(null);
+            $table->string('address_street_number')->nullable()->default(null);
+            $table->string('address_street_name')->nullable()->default(null);
+            $table->string('address_zip_code')->nullable()->default(null);
+            $table->string('address_city')->nullable()->default(null);
+            $table->string('address_country')->nullable()->default(null);
+            $table->string('address_billing')->nullable()->default(null);
+            $table->string('tva_number')->nullable()->default(null);
+            $table->string('website')->nullable()->default(null);
+            $table->string('source')->nullable()->default(null);
+            $table->string('referent_name')->nullable()->default(null);
+            $table->string('referent_email')->nullable()->default(null);
+            $table->string('referent_number')->nullable()->default(null);
             $table->timestamps();
         });
     }

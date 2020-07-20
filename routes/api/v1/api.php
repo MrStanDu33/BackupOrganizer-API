@@ -30,6 +30,10 @@ Route::prefix('/user')->group(function() {
 
 Route::middleware(['auth:api'])->group(function() {
     Route::group(['prefix' =>'/customer'], function() {
-        Route::get('/', 'api\v1\user\CustomerController@index');
+        Route::get('/', 'api\v1\customer\CustomerController@index');
+        Route::post('/', 'api\v1\customer\CustomerController@create');
+        Route::get('/{id}', 'api\v1\customer\CustomerController@show');
+        Route::put('/{id}', 'api\v1\customer\CustomerController@update');
+        Route::delete('/{id}', 'api\v1\customer\CustomerController@delete');
     });
 });

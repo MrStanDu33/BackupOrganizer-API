@@ -7,17 +7,21 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
     public function login(Request $request) {
-        $login = $request->validate([
+        $login = Validator::make($request->all(),[
             'email' => 'required|string',
             'password' => 'required|string',
         ]);
 
-        if (!Auth::attempt($login, true))
-            return response(['message' => 'Invalid login credentials.'], config('httpcodes.UNAUTHORIZED'));
+        // check if parameters are corrects
+        if ($validation->fails()) return response(['message' => $validation->messages()], config('httpcodes.UNPROCESSABLE_ENTITY'));
+
+        // check if user can log in
+        if (!Auth::attempt($login, true)) return response(['message' => 'Invalid login credentials.'], config('httpcodes.UNAUTHORIZED'));
 
         $accessToken = Auth::user()->createToken('authToken')->accessToken;
 
@@ -25,19 +29,25 @@ class LoginController extends Controller
     }
 
     public function register(Request $request) {
+        // check if regristation enabled
         if (!env('ALLOW_REGISTRATION')) return response(['message' => 'Register has been manually desactivated.'], config('httpcodes.FORBIDDEN'));
-        $login = $request->validate([
+
+        $validation = Validator::make($request->all(),[
             'name' => 'required',
             'email' => 'required|email',
             'password' => 'required|min:8'
         ]);
 
-        if (User::where('email', '=', $login['email'])->exists()) return response(['message' => 'A user already exist with given email address.'], config('httpcodes.CONFLICT'));
+        // check if parameters are corrects
+        if ($validation->fails()) return response(['message' => $validation->messages()], config('httpcodes.UNPROCESSABLE_ENTITY'));
+
+        // check if user already exists
+        if (User::where('email', '=', $request->email)->exists()) return response(['message' => 'A user already exist with given email address.'], config('httpcodes.CONFLICT'));
 
         $user = User::create([
-            'name' => $login['name'],
-            'email' => $login['email'],
-            'password' => bcrypt($login['password'])
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password)
         ]);
 
         $accessToken = $user->createToken('authToken')->accessToken;

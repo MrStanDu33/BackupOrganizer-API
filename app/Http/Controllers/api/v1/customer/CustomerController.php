@@ -38,7 +38,8 @@ class CustomerController extends Controller
         $validation = $this->validateCustomer($customerData->all());
         if ($validation !== true) return $validation;
 
-        $customer = Customer::create($customerData->toArray());
+        $customerCreated = Customer::create($customerData->toArray());
+        $customer = Customer::find($customerCreated->id);
 
         return response(['customer' => $customer], config('httpcodes.CREATED'));
     }
@@ -60,20 +61,20 @@ class CustomerController extends Controller
     private function validateCustomer($data) {
         $validation = Validator::make($data, [
             'name' => 'required|string',
-            'siren' => 'optional|string|digits:9',
-            'logo' => 'optional|file|image|mimes:jpeg,png',
-            'address_street_number' => 'optional|numeric|min:0',
-            'address_street_name' => 'optional|string',
-            'address_zip_code' => 'optional|numeric|min:5',
-            'address_city' => 'optional|string',
-            'address_country' => 'optional|string',
-            'address_billing' => 'optional|string',
-            'tva_number' => 'optional|string|min:13|max:13',
-            'website' => 'optional|string|url',
-            'source' => 'optional|string',
-            'referent_name' => 'optional|string',
-            'referent_email' => 'optional|string|email',
-            'referent_number' => 'optional|string|min:12|max:12',
+            'siren' => 'nullable|string|digits:9',
+            'logo' => 'nullable|file|image|mimes:jpeg,png',
+            'address_street_number' => 'nullable|string',
+            'address_street_name' => 'nullable|string',
+            'address_zip_code' => 'nullable|string|digits:5',
+            'address_city' => 'nullable|string',
+            'address_country' => 'nullable|string',
+            'address_billing' => 'nullable|string',
+            'tva_number' => 'nullable|string|min:13|max:13',
+            'website' => 'nullable|string|url',
+            'source' => 'nullable|string',
+            'referent_name' => 'nullable|string',
+            'referent_email' => 'nullable|string|email',
+            'referent_number' => 'nullable|string|min:12|max:12',
         ]);
         if ($validation->fails())
             return response(['errors' => $validation->messages()], config('httpcodes.UNPROCESSABLE_ENTITY'));

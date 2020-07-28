@@ -15,10 +15,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('/user')->group(function() {
-    Route::post('/register', 'api\v1\LoginController@register');
-    Route::post('/login', 'api\v1\LoginController@login');
+    Route::post('/register', 'api\v1\AuthController@register');
+    Route::post('/login', 'api\v1\AuthController@login');
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/', 'api\v1\user\UserController@index');
+        Route::get('/me', function(Request $request) { return response(['user' => Auth::user()], config('httpcodes.OK')); });
     });
 });
 

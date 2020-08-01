@@ -58,7 +58,7 @@ class ProjectController extends Controller
         $ProjectCreated = Project::create($ProjectData->toArray());
         $Project = Project::find($ProjectCreated->id);
 
-        return response(['Project' => $Project], config('httpcodes.CREATED'));
+        return response(['project' => $Project], config('httpcodes.CREATED'));
     }
 
     private function createBulk(Request $ProjectsData) {
@@ -72,7 +72,7 @@ class ProjectController extends Controller
         foreach ($ProjectsData->toArray() as $ProjectData) {
             array_push($Projects, Project::create($ProjectData));
         }
-        return response(['Projects' => $Projects], config('httpcodes.CREATED'));
+        return response(['projects' => $Projects], config('httpcodes.CREATED'));
     }
 
     private function validateProject($data) {
@@ -95,9 +95,9 @@ class ProjectController extends Controller
     public function show($id)
     {
         if (Project::where('id', $id)->count() !== 1)
-            return response(['message' => 'No Project match this id'], config('httpcodes.NOT_FOUND'));
+            return response(['message' => 'No project match this id'], config('httpcodes.NOT_FOUND'));
         $Project = Project::find($id)->toArray();
-        return response(['Project' => $Project], config('httpcodes.OK'));
+        return response(['project' => $Project], config('httpcodes.OK'));
     }
 
     /**
@@ -114,12 +114,12 @@ class ProjectController extends Controller
         if ($validation !== true) return $validation;
 
         if (Project::where('id', $id)->count() !== 1)
-            return response(['message' => 'No Project match this id'], config('httpcodes.NOT_FOUND'));
+            return response(['message' => 'No project match this id'], config('httpcodes.NOT_FOUND'));
 
         $Project = Project::find($id);
         $Project->update($request->toArray());
 
-        return response(['Project' => $Project->toArray()], config('httpcodes.OK'));
+        return response(['project' => $Project->toArray()], config('httpcodes.OK'));
     }
 
     /**
@@ -131,12 +131,12 @@ class ProjectController extends Controller
     public function delete($id)
     {
         if (Project::where('id', $id)->count() !== 1)
-            return response(['message' => 'No Project match this id'], config('httpcodes.NOT_FOUND'));
+            return response(['message' => 'No project match this id'], config('httpcodes.NOT_FOUND'));
 
         $Project = Project::find($id);
         $Project->delete();
 
-        return response(['Project' => $Project->toArray()], config('httpcodes.OK'));
+        return response(['project' => $Project->toArray()], config('httpcodes.OK'));
     }
 
 

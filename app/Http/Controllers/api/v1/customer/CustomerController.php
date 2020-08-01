@@ -61,7 +61,7 @@ class CustomerController extends Controller
     private function validateCustomer($data) {
         $validation = Validator::make($data, [
             'name' => 'required|string',
-            'siren' => 'nullable|string|digits:9',
+            'siret' => 'nullable|string|digits:9',
             'logo' => 'nullable|file|image|mimes:jpeg,png',
             'address_street_number' => 'nullable|string',
             'address_street_name' => 'nullable|string',
@@ -79,8 +79,8 @@ class CustomerController extends Controller
         if ($validation->fails())
             return response(['errors' => $validation->messages()], config('httpcodes.UNPROCESSABLE_ENTITY'));
         // check if user already exists
-        if (isset($data['siren']) && Customer::where('siren', '=', $data['siren'])->exists())
-            return response(['errors' => ['conflict' => 'A customer already exist with given siren.']], config('httpcodes.CONFLICT'));
+        if (isset($data['siret']) && Customer::where('siret', '=', $data['siret'])->exists())
+            return response(['errors' => ['conflict' => 'A customer already exist with given siret.']], config('httpcodes.CONFLICT'));
         return true;
     }
 

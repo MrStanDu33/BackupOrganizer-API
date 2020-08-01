@@ -61,7 +61,7 @@ class CustomerController extends Controller
     private function validateCustomer($data) {
         $validation = Validator::make($data, [
             'name' => 'required|string',
-            'siret' => 'nullable|string|digits:9',
+            'siret' => 'nullable|string|digits:14',
             'logo' => 'nullable|file|image|mimes:jpeg,png',
             'address_street_number' => 'nullable|string',
             'address_street_name' => 'nullable|string',

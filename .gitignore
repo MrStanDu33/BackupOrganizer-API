@@ -12,3 +12,4 @@ npm-debug.log
 yarn-error.log
 /*/deploy-log.txt
 .DS_Store
+.history/*

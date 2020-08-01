@@ -13,7 +13,7 @@ class Customer extends Model
      */
     protected $fillable = [
         'name',
-        'siren',
+        'siret',
         'logo',
         'address_street_number',
         'address_street_name',

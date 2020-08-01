@@ -16,12 +16,12 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($customerId = null)
+    public function index(Request $request)
     {
-        if ($customerId === null)
+        if ($request->customerId === null)
             return Project::all();
 
-        return $this->indexByCustomer($customerId);
+        return $this->indexByCustomer(intval($request->customerId));
     }
 
     /**
@@ -29,9 +29,12 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function indexByCustomer(Customer $customerId)
+    public function indexByCustomer($customerId)
     {
-        return Project::where('customerId', $customerId);
+        $customerValidation = $this->customerExist($customerId);
+        if ($customerValidation !== true) return $customerValidation;
+
+        return Project::where('customerId', $customerId)->get()->toArray();
     }
 
     /**
@@ -74,27 +77,12 @@ class ProjectController extends Controller
 
     private function validateProject($data) {
         $validation = Validator::make($data, [
+            'customerId' => 'required|numeric|exists:customers,id',
             'name' => 'required|string',
-            'siret' => 'nullable|string|digits:9',
-            'logo' => 'nullable|file|image|mimes:jpeg,png',
-            'address_street_number' => 'nullable|string',
-            'address_street_name' => 'nullable|string',
-            'address_zip_code' => 'nullable|string|digits:5',
-            'address_city' => 'nullable|string',
-            'address_country' => 'nullable|string',
-            'address_billing' => 'nullable|string',
-            'tva_number' => 'nullable|string|min:13|max:13',
-            'website' => 'nullable|string|url',
-            'source' => 'nullable|string',
-            'referent_name' => 'nullable|string',
-            'referent_email' => 'nullable|string|email',
-            'referent_number' => 'nullable|string|min:12|max:12',
+            'description' => 'nullable|string',
         ]);
         if ($validation->fails())
             return response(['errors' => $validation->messages()], config('httpcodes.UNPROCESSABLE_ENTITY'));
-        // check if user already exists
-        if (isset($data['siret']) && Project::where('siret', '=', $data['siret'])->exists())
-            return response(['errors' => ['conflict' => 'A Project already exist with given siret.']], config('httpcodes.CONFLICT'));
         return true;
     }
 
@@ -149,5 +137,18 @@ class ProjectController extends Controller
         $Project->delete();
 
         return response(['Project' => $Project->toArray()], config('httpcodes.OK'));
+    }
+
+
+    /**
+     * Verifies if customer exist with given customerId.
+     *
+     * @param  int  $customerId
+     * @return \Illuminate\Http\Response
+     */
+    private function customerExist($customerId) {
+        if (Customer::where('id', $customerId)->count() !== 1)
+            return response(['message' => 'No customer match this id'], config('httpcodes.NOT_FOUND'));
+        return true;
     }
 }

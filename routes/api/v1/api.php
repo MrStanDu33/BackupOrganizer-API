@@ -52,4 +52,14 @@ Route::middleware(['auth:api'])->group(function() {
         Route::put('/{databaseId}', 'api\v1\database\DatabaseController@update');
         Route::delete('/{databaseId}', 'api\v1\database\DatabaseController@delete');
     });
+    Route::group(['prefix' =>'/backup'], function() {
+        // Route::get('/', 'api\v1\backup\BackupController@index');
+        Route::group(['prefix' =>'/duration'], function() {
+            Route::get('/', 'api\v1\backup\BackupDurationController@index');
+            Route::post('/', 'api\v1\backup\BackupDurationController@create');
+            Route::get('/{durationId}', 'api\v1\backup\BackupDurationController@show');
+            Route::put('/{durationId}', 'api\v1\backup\BackupDurationController@update');
+            Route::delete('/{durationId}', 'api\v1\backup\BackupDurationController@delete');
+        });
+    });
 });

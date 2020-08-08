@@ -38,4 +38,18 @@ Route::middleware(['auth:api'])->group(function() {
         Route::put('/{projectId}', 'api\v1\project\ProjectController@update');
         Route::delete('/{projectId}', 'api\v1\project\ProjectController@delete');
     });
+    Route::group(['prefix' =>'/website'], function() {
+        Route::get('/', 'api\v1\website\WebsiteController@index');
+        Route::post('/', 'api\v1\website\WebsiteController@create');
+        Route::get('/{websiteId}', 'api\v1\website\WebsiteController@show');
+        Route::put('/{websiteId}', 'api\v1\website\WebsiteController@update');
+        Route::delete('/{websiteId}', 'api\v1\website\WebsiteController@delete');
+    });
+    Route::group(['prefix' =>'/database'], function() {
+        Route::get('/', 'api\v1\database\DatabaseController@index');
+        Route::post('/', 'api\v1\database\DatabaseController@create');
+        Route::get('/{databaseId}', 'api\v1\database\DatabaseController@show');
+        Route::put('/{databaseId}', 'api\v1\database\DatabaseController@update');
+        Route::delete('/{databaseId}', 'api\v1\database\DatabaseController@delete');
+    });
 });

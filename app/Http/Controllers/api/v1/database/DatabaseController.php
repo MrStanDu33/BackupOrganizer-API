@@ -50,32 +50,32 @@ class DatabaseController extends Controller
         return $this->createBulk($request);
     }
 
-    private function createOne(Request $WebsiteData) {
+    private function createOne(Request $DatabaseData) {
         // check if sent data is correct
-        $validation = $this->validateWebsite($WebsiteData->all());
+        $validation = $this->validateDatabase($DatabaseData->all());
         if ($validation !== true) return $validation;
 
-        $WebsiteCreated = Database::create($WebsiteData->toArray());
-        $Database = Database::find($WebsiteCreated->id);
+        $DatabaseCreated = Database::create($DatabaseData->toArray());
+        $Database = Database::find($DatabaseCreated->id);
 
         return response(['database' => $Database], config('httpcodes.CREATED'));
     }
 
-    private function createBulk(Request $WebsiteData) {
+    private function createBulk(Request $DatabaseData) {
         // check if sent data is correct
-        foreach ($WebsiteData->toArray() as $WebsiteData) {
-            $validation = $this->validateWebsite($WebsiteData);
+        foreach ($DatabaseData->toArray() as $DatabaseData) {
+            $validation = $this->validateDatabase($DatabaseData);
             if ($validation !== true) return $validation;
         }
 
         $Database = [];
-        foreach ($WebsiteData->toArray() as $WebsiteData) {
-            array_push($Database, Database::create($WebsiteData));
+        foreach ($DatabaseData->toArray() as $DatabaseData) {
+            array_push($Database, Database::create($DatabaseData));
         }
         return response(['database' => $Database], config('httpcodes.CREATED'));
     }
 
-    private function validateWebsite($data) {
+    private function validateDatabase($data) {
         $validation = Validator::make($data, [
             'projectId' => 'required|numeric|exists:projects,id',
             'name' => 'required|string',
@@ -113,7 +113,7 @@ class DatabaseController extends Controller
     public function update(Request $request, $id)
     {
         // check if sent data is correct
-        $validation = $this->validateWebsite($request->toArray());
+        $validation = $this->validateDatabase($request->toArray());
         if ($validation !== true) return $validation;
 
         if (Database::where('id', $id)->count() !== 1)

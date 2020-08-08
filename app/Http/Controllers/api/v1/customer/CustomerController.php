@@ -37,6 +37,9 @@ class CustomerController extends Controller
         // check if sent data is correct
         $validation = $this->validateCustomer($customerData->all());
         if ($validation !== true) return $validation;
+        // check if user already exists
+        if (isset($customerData['siret']) && Customer::where('siret', '=', $customerData['siret'])->exists())
+            return response(['errors' => ['conflict' => 'A customer already exist with given siret.']], config('httpcodes.CONFLICT'));
 
         $customerCreated = Customer::create($customerData->toArray());
         $customer = Customer::find($customerCreated->id);
@@ -48,6 +51,9 @@ class CustomerController extends Controller
         // check if sent data is correct
         foreach ($customersData->toArray() as $customerData) {
             $validation = $this->validateCustomer($customerData);
+            // check if user already exists
+            if (isset($customerData['siret']) && Customer::where('siret', '=', $customerData['siret'])->exists())
+                return response(['errors' => ['conflict' => 'A customer already exist with given siret.']], config('httpcodes.CONFLICT'));
             if ($validation !== true) return $validation;
         }
 
@@ -79,9 +85,6 @@ class CustomerController extends Controller
         ]);
         if ($validation->fails())
             return response(['errors' => $validation->messages()], config('httpcodes.UNPROCESSABLE_ENTITY'));
-        // check if user already exists
-        if (isset($data['siret']) && Customer::where('siret', '=', $data['siret'])->exists())
-            return response(['errors' => ['conflict' => 'A customer already exist with given siret.']], config('httpcodes.CONFLICT'));
         return true;
     }
 

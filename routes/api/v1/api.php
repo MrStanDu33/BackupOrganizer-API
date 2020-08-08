@@ -17,13 +17,13 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('/user')->group(function() {
     Route::post('/register', 'api\v1\AuthController@register');
     Route::post('/login', 'api\v1\AuthController@login');
-    Route::group(['middleware' => 'auth:api'], function () {
-        Route::get('/', 'api\v1\user\UserController@index');
-        Route::get('/me', function(Request $request) { return response(['user' => Auth::user()], config('httpcodes.OK')); });
-    });
 });
 
 Route::middleware(['auth:api'])->group(function() {
+    Route::prefix('/user')->group(function() {
+        Route::get('/', 'api\v1\user\UserController@index');
+        Route::get('/me', function(Request $request) { return response(['user' => Auth::user()], config('httpcodes.OK')); });
+    });
     Route::group(['prefix' =>'/customer'], function() {
         Route::get('/', 'api\v1\customer\CustomerController@index');
         Route::post('/', 'api\v1\customer\CustomerController@create');

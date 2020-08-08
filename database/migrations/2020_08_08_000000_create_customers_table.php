@@ -29,7 +29,8 @@ class CreateCustomersTable extends Migration
             $table->string('source')->nullable()->default(null);
             $table->string('referent_name')->nullable()->default(null);
             $table->string('referent_email')->nullable()->default(null);
-            $table->string('referent_number')->nullable()->default(null);
+            $table->string('referent_number_indicative')->nullable()->default(null);
+            $table->string('referent_number_value')->nullable()->default(null);
             $table->timestamps();
         });
     }

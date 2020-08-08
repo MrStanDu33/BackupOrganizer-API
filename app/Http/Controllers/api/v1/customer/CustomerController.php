@@ -74,7 +74,8 @@ class CustomerController extends Controller
             'source' => 'nullable|string',
             'referent_name' => 'nullable|string',
             'referent_email' => 'nullable|string|email',
-            'referent_number' => 'nullable|string|min:12|max:12',
+            'referent_number_indicative' => 'nullable|string',
+            'referent_number_value' => 'nullable|string',
         ]);
         if ($validation->fails())
             return response(['errors' => $validation->messages()], config('httpcodes.UNPROCESSABLE_ENTITY'));

@@ -61,5 +61,12 @@ Route::middleware(['auth:api'])->group(function() {
             Route::put('/{durationId}', 'api\v1\backup\BackupDurationController@update');
             Route::delete('/{durationId}', 'api\v1\backup\BackupDurationController@delete');
         });
+        Route::group(['prefix' =>'/frequency'], function() {
+            Route::get('/', 'api\v1\backup\BackupFrequencyController@index');
+            Route::post('/', 'api\v1\backup\BackupFrequencyController@create');
+            Route::get('/{frequencyId}', 'api\v1\backup\BackupFrequencyController@show');
+            Route::put('/{frequencyId}', 'api\v1\backup\BackupFrequencyController@update');
+            Route::delete('/{frequencyId}', 'api\v1\backup\BackupFrequencyController@delete');
+        });
     });
 });

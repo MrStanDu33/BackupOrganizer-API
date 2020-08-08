@@ -26,7 +26,8 @@ class Customer extends Model
         'source',
         'referent_name',
         'referent_email',
-        'referent_number',
+        'referent_number_indicative',
+        'referent_number_value',
     ];
 
     /**

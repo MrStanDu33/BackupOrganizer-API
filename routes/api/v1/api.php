@@ -17,13 +17,13 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('/user')->group(function() {
     Route::post('/register', 'api\v1\AuthController@register');
     Route::post('/login', 'api\v1\AuthController@login');
-    Route::group(['middleware' => 'auth:api'], function () {
-        Route::get('/', 'api\v1\user\UserController@index');
-        Route::get('/me', function(Request $request) { return response(['user' => Auth::user()], config('httpcodes.OK')); });
-    });
 });
 
 Route::middleware(['auth:api'])->group(function() {
+    Route::prefix('/user')->group(function() {
+        Route::get('/', 'api\v1\user\UserController@index');
+        Route::get('/me', function(Request $request) { return response(['user' => Auth::user()], config('httpcodes.OK')); });
+    });
     Route::group(['prefix' =>'/customer'], function() {
         Route::get('/', 'api\v1\customer\CustomerController@index');
         Route::post('/', 'api\v1\customer\CustomerController@create');
@@ -51,5 +51,22 @@ Route::middleware(['auth:api'])->group(function() {
         Route::get('/{databaseId}', 'api\v1\database\DatabaseController@show');
         Route::put('/{databaseId}', 'api\v1\database\DatabaseController@update');
         Route::delete('/{databaseId}', 'api\v1\database\DatabaseController@delete');
+    });
+    Route::group(['prefix' =>'/backup'], function() {
+        // Route::get('/', 'api\v1\backup\BackupController@index');
+        Route::group(['prefix' =>'/duration'], function() {
+            Route::get('/', 'api\v1\backup\BackupDurationController@index');
+            Route::post('/', 'api\v1\backup\BackupDurationController@create');
+            Route::get('/{durationId}', 'api\v1\backup\BackupDurationController@show');
+            Route::put('/{durationId}', 'api\v1\backup\BackupDurationController@update');
+            Route::delete('/{durationId}', 'api\v1\backup\BackupDurationController@delete');
+        });
+        Route::group(['prefix' =>'/frequency'], function() {
+            Route::get('/', 'api\v1\backup\BackupFrequencyController@index');
+            Route::post('/', 'api\v1\backup\BackupFrequencyController@create');
+            Route::get('/{frequencyId}', 'api\v1\backup\BackupFrequencyController@show');
+            Route::put('/{frequencyId}', 'api\v1\backup\BackupFrequencyController@update');
+            Route::delete('/{frequencyId}', 'api\v1\backup\BackupFrequencyController@delete');
+        });
     });
 });
